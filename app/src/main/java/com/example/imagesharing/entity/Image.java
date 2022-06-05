@@ -11,7 +11,9 @@ public class Image extends BmobObject implements Serializable {
     private String title;
     private BmobUser author;
     private BmobFile pic;
-    //private BmobRelation likes;
+    private int dzCount;
+    private int dlCount;
+    private BmobRelation likes;
 
     public String getTitle() {
         return title;
@@ -37,12 +39,29 @@ public class Image extends BmobObject implements Serializable {
         this.pic = pic;
     }
 
+    public int getDzCount() {
+        return dzCount;
+    }
 
-//    public BmobRelation getLikes() {
-//        return likes;
-//    }
-//
-//    public void setLikes(BmobRelation likes) {
-//        this.likes = likes;
-//    }
+    public void setDzCount(int dzCount) {
+        this.dzCount = dzCount;
+    }
+
+    public int getDlCount() {
+        return dlCount;
+    }
+
+    public void setDlCount(int dlCount) {
+        this.dlCount = dlCount;
+    }
+
+
+    public BmobRelation getLikes() {
+        return likes;
+    }
+
+    public Image setLikes(BmobRelation likes) {
+        this.likes = likes;
+        return this;
+    }
 }

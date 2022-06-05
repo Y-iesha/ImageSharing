@@ -10,20 +10,23 @@
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/drawable-v24/shape_login_btn.xml" value="0.1" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/drawable-v24/shape_login_form.xml" value="0.1" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/drawable-v24/shape_register_btn.xml" value="0.1" />
+        <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/drawable/camera.xml" value="0.1" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/drawable/ic_launcher_background.xml" value="0.182" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/drawable/icon_out.xml" value="0.182" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/drawable/icon_upload.xml" value="0.182" />
+        <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/drawable/photo_album.xml" value="0.1" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/layout/activity_gegister.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/layout/activity_home.xml" value="0.1" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/layout/activity_login.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/layout/activity_main.xml" value="0.21739130434782608" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/layout/activity_register.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/layout/activity_register2.xml" value="0.21693840579710144" />
-        <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/layout/fragment_collect.xml" value="0.12335359675785208" />
+        <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/layout/fragment_collect.xml" value="0.4" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/layout/fragment_my.xml" value="0.264" />
-        <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/layout/item_image.xml" value="0.23157894736842105" />
+        <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/layout/item_image.xml" value="0.6" />
         <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/layout/item_picture.xml" value="0.1" />
+        <entry key="..\:/Users/86191/AndroidStudioProjects/ImageSharing/app/src/main/res/xml/file_paths.xml" value="0.22418478260869565" />
       </map>
     </option>
   </component>

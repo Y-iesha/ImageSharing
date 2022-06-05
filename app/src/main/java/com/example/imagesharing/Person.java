@@ -1,8 +1,9 @@
 package com.example.imagesharing;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.BmobUser;
 
-public class Person extends BmobObject {
+public class Person extends BmobUser {
     private String name;
     private String address;
 
