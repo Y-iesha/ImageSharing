@@ -27,6 +27,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.imagesharing.R;
 import com.example.imagesharing.entity.Image;
+import com.example.imagesharing.entity.User;
 import com.example.imagesharing.util.PhotoUtils;
 import com.example.imagesharing.util.RealPathFromUriUtils;
 
@@ -116,7 +117,7 @@ public class CollectFragment extends Fragment {
 
         image.setTitle(title.getText().toString().trim());
         BmobPointer pointer = new BmobPointer(user);
-        image.setAuthor(BmobUser.getCurrentUser(BmobUser.class));
+        image.setAuthor(User.getCurrentUser(User.class));
 
         String picPath = image_path;
         pic = new BmobFile(new File(picPath));

@@ -31,13 +31,9 @@ import cn.bmob.v3.listener.FindListener;
  */
 public class HomeFragment extends Fragment {
 
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String title;
     private String mParam2;
     Image image=new Image();
@@ -46,29 +42,13 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment HomeFragment.
-//     */
-    // TODO: Rename and change types and number of parameters
+
     public static HomeFragment newInstance(String title) {
         HomeFragment fragment = new HomeFragment();
         fragment.title = title;
         return fragment;
     }
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,15 +59,15 @@ public class HomeFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        //获取所有的Image信息
+        //调用BmobObject提供的查询方法，获取所有的Image信息
         BmobQuery<Image> bq=new BmobQuery<>();
         bq.include("author");
         bq.findObjects(new FindListener<Image>() {
             @Override
             public void done(List<Image> list, BmobException e) {
                 if(e==null){
-                    ImageAdapter imageAdapter=new ImageAdapter(getActivity(),list);
-                    recyclerView.setAdapter(imageAdapter);
+                    ImageAdapter imageAdapter=new ImageAdapter(getActivity(),list);  //图片信息传入适配器
+                    recyclerView.setAdapter(imageAdapter);                     //fragment中显示
 
                 }else{
 
@@ -95,15 +75,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-//        for(int i=0;i<8;i++){
-//            Image ve=new Image();
-//            ve.setTitle("jjjjjjj");
-//            //ve.setAuthor(user);
-//            ve.setAuthor(BmobUser.getCurrentUser(BmobUser.class));
-//            datas.add(ve);
-//        }
-//        ImageAdapter imageAdapter=new ImageAdapter(getActivity(),datas);
-//        recyclerView.setAdapter(imageAdapter);
         return v;
     }
 }

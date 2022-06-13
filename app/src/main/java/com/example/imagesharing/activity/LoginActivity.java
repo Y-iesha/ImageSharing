@@ -3,8 +3,8 @@ package com.example.imagesharing.activity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.example.imagesharing.R;
+import com.example.imagesharing.entity.User;
 import com.example.imagesharing.util.StringUtils;
 
 import cn.bmob.v3.BmobUser;
@@ -13,10 +13,10 @@ import cn.bmob.v3.listener.SaveListener;
 
 public class LoginActivity extends BaseActivity {
 
-    private EditText etAccount;
-    private EditText etPwd;
-    private Button btnLogin;
-    BmobUser user = new BmobUser();
+    private EditText etName;        //用户名
+    private EditText etPwd;         //密码
+    private Button btnLogin;        //登录按钮
+    User user = new User();
 
 
     @Override
@@ -26,19 +26,19 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        etAccount = findViewById(R.id.et_account);
+        etName = findViewById(R.id.et_account);
         etPwd = findViewById(R.id.et_pwd);
         btnLogin = findViewById(R.id.btn_login);
     }
 
     @Override
     protected void initData() {
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {          //登录按钮监听
             @Override
             public void onClick(View view) {
-                String account = etAccount.getText().toString().trim();
+                String name = etName.getText().toString().trim();
                 String pwd = etPwd.getText().toString().trim();
-                login(account, pwd);
+                login(name, pwd);          //调用类内登录方法
 
 
             }
@@ -46,8 +46,11 @@ public class LoginActivity extends BaseActivity {
 
     }
 
-    private void login(String account, String pwd) {
-        if (StringUtils.isEmpty(account)) {
+
+    //登录
+    private void login(String name, String pwd) {
+        //输入为空时
+        if (StringUtils.isEmpty(name)) {
             showToast("请输入账号");
             return;
         }
@@ -56,10 +59,10 @@ public class LoginActivity extends BaseActivity {
             return;
         }
 
-
-
-        user.setUsername(account);
+        //输入非空时
+        user.setUsername(name);
         user.setPassword(pwd);
+        //BmobUser提供的用户登录方法
         user.login(new SaveListener<BmobUser>() {
             @Override
             public void done(BmobUser user, BmobException e) {

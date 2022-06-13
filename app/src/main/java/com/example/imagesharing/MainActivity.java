@@ -19,8 +19,8 @@ import cn.bmob.v3.listener.SaveListener;
 public class MainActivity extends BaseActivity {
 
 
-    private Button btnLogin;
-    private Button btnRegister;
+    private Button btnLogin;           //登录按钮
+    private Button btnRegister;        //注册按钮
 
 
     @Override
@@ -37,7 +37,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {       //登录按钮监听跳转
             @Override
             public void onClick(View view) {
                 navigateTo(LoginActivity.class);
@@ -45,7 +45,7 @@ public class MainActivity extends BaseActivity {
         });
 
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+        btnRegister.setOnClickListener(new View.OnClickListener() {    //注册按钮监听跳转
             @Override
             public void onClick(View view) {
                 navigateTo(RegisterActivity.class);

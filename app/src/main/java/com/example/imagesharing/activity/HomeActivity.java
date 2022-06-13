@@ -20,13 +20,13 @@ import java.util.List;
 
 public class HomeActivity extends BaseActivity {
 
-
-    private String[] mTitles = {"首页", "资讯", "我的"};
+    //导航栏
+    private String[] mTitles = {"首页", "上传", "我的"};
     private int[] mIconUnselectIds = {
-            R.mipmap.home_unselect, R.mipmap.collect_unselect,
+            R.mipmap.home_unselect, R.mipmap.up_unselect,
             R.mipmap.my_unselect};
     private int[] mIconSelectIds = {
-            R.mipmap.home_selected, R.mipmap.collect_selected,
+            R.mipmap.home_selected, R.mipmap.up_selected,
             R.mipmap.my_selected};
     private ArrayList<Fragment> mFragments = new ArrayList<>();
     private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();

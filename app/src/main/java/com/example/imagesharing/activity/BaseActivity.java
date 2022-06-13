@@ -44,10 +44,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         startActivity(in);
     }
 
-    protected void saveStringToSp(String key, String val) {
-        SharedPreferences sp = getSharedPreferences("sp_ttit", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(key, val);
-        editor.commit();
-    }
+//    protected void saveStringToSp(String key, String val) {
+//        SharedPreferences sp = getSharedPreferences("sp_ttit", MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sp.edit();
+//        editor.putString(key, val);
+//        editor.commit();
+//    }
 }

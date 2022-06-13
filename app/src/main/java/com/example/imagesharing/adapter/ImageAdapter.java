@@ -19,6 +19,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.imagesharing.R;
 import com.example.imagesharing.entity.Avatar;
 import com.example.imagesharing.entity.Image;
+import com.example.imagesharing.entity.User;
 
 import java.io.File;
 import java.util.List;
@@ -38,87 +39,9 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context mContext;
     private List<Image> datas;
     private static int dzcount;
-    static BmobUser user =BmobUser.getCurrentUser(BmobUser.class);
+    static User user =User.getCurrentUser(User.class);
 
 
-
-
-    public void checkdz(ViewHolder vh, Image imageEntity){
-        BmobQuery<BmobUser> query=new BmobQuery<BmobUser>();
-        query.addWhereRelatedTo("likes",new BmobPointer(imageEntity));
-        query.findObjects(new FindListener<BmobUser>() {
-
-            public void done(List<BmobUser> list, BmobException e) {
-                if(e==null){
-                    dzcount=list.size();
-                    if(dzcount==0){
-                        BmobRelation relation = new BmobRelation();
-                        relation.add(user);
-                        imageEntity.setLikes(relation);
-                        imageEntity.update(new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if(e==null){
-                                    vh.DzImage.setImageResource(R.mipmap.dianzan_select);
-                                    vh.tvDz.setText(String.valueOf(++dzcount));
-                                    Log.i("bmob","多对多关联添加成功");
-                                }else{
-                                    Log.i("bmob","失败："+e.getMessage());
-                                }
-                            }
-
-                        });
-                    }
-                    for(int i=0;i<dzcount;i++){
-                        BmobUser B=new BmobUser();
-                        B=list.get(i);
-                        if(B.getObjectId().toString().equals(user.getObjectId().toString())){
-                            BmobRelation relation = new BmobRelation();
-                            relation.remove(user);
-                            imageEntity.setLikes(relation);
-                            imageEntity.update(new UpdateListener() {
-
-                                @Override
-                                public void done(BmobException e) {
-                                    if(e==null){
-                                        vh.DzImage.setImageResource(R.mipmap.dianzan);
-                                        vh.tvDz.setText(String.valueOf(--dzcount));
-                                        Log.i("bmob","关联关系删除成功");
-                                    }else{
-                                        Log.i("bmob","失败："+e.getMessage());
-                                    }
-                                }
-
-                            });
-                            break;
-                        }
-                        if(i==dzcount-1) {
-                            BmobRelation relation = new BmobRelation();
-                            relation.add(user);
-                            imageEntity.setLikes(relation);
-                            imageEntity.update(new UpdateListener() {
-                                @Override
-                                public void done(BmobException e) {
-                                    if(e==null){
-                                        vh.DzImage.setImageResource(R.mipmap.dianzan_select);
-                                        vh.tvDz.setText(String.valueOf(++dzcount));
-                                        Log.i("bmob","多对多关联添加成功");
-                                    }else{
-                                        Log.i("bmob","失败："+e.getMessage());
-                                    }
-                                }
-
-                            });
-                        }
-
-                    }
-                }else{
-                    Log.i("bmob","失败："+e.getMessage());
-                }
-            }
-        });
-
-    }
 
     public ImageAdapter(Context context, List<Image> datas) {
         this.mContext = context;
@@ -137,23 +60,25 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolder vh= (ViewHolder) holder;
         Image imageEntity= datas.get(position);
+        //一个ViewHolder vh显示一个Image的信息
         vh.tvTitle.setText(imageEntity.getTitle());
         vh.tvAuthor.setText(imageEntity.getAuthor().getUsername());
         vh.tvDl.setText(String.valueOf(imageEntity.getDlCount()));
 
-        BmobQuery<BmobUser> query=new BmobQuery<BmobUser>();
+        //显示点赞相关信息
+        //利用BmobObject提供的查询方法查询Image表
+        BmobQuery<User> query=new BmobQuery<User>();
         query.addWhereRelatedTo("likes",new BmobPointer(imageEntity));
-        query.findObjects(new FindListener<BmobUser>() {
+        query.findObjects(new FindListener<User>() {
 
-            public void done(List<BmobUser> list, BmobException e) {
+            public void done(List<User> list, BmobException e) {
                 if(e==null){
-                    dzcount=list.size();
-                    vh.tvDz.setText(String.valueOf(dzcount));
-                    for(int i=0;i<dzcount;i++){
-                        BmobUser B=new BmobUser();
+                    dzcount=list.size();                            //喜欢该图片的用户的数量
+                    vh.tvDz.setText(String.valueOf(dzcount));       //显示喜欢该图片的用户的数量
+                    for(int i=0;i<dzcount;i++){                     //判断该用户是否已经喜欢过该图片
+                        User B=new User();
                         B=list.get(i);
-
-                        if(B.getObjectId().toString().equals(user.getObjectId().toString())){
+                        if(B.getObjectId().toString().equals(user.getObjectId().toString())){  //如果喜欢过图标变为红色
                             vh.DzImage.setImageResource(R.mipmap.dianzan_select);
 
                         }else{
@@ -161,19 +86,21 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         }
                     }
                 }else{
-                    Log.i("bmob","失败："+e.getMessage());
+                    Log.i("bmob","错误："+e.getMessage());
                 }
             }
         });
 
+        //点赞图标监听
         vh.DzImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkdz(vh, imageEntity);
+                checkdz(vh, imageEntity);            //调用类内方法
 
             }
         });
 
+        //下载图标监听
         vh.DlImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -214,32 +141,114 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 .override(360,200)
                 //.centerCrop()
                 .into(vh.tvImage);
-        //vh.tvDz.setText(String.valueOf(imageEntity.getLikes()));
 
         //加载头像
-        BmobQuery<Avatar> fa=new BmobQuery<>();
-        fa.addWhereEqualTo("author",imageEntity.getAuthor());
+        Glide.with(mContext)
+                .load(imageEntity.getAuthor().getAvatar().getFileUrl())
+                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                .into(vh.tvAvatar);
 
-        fa.findObjects(new FindListener<Avatar>() {
-            @Override
-            public void done(List<Avatar> listt, BmobException e) {
-                if(listt!=null){
-                    //Avatar av= listt.get(0);
-                    //Toast.makeText(mContext, "av:"+listt.size(), Toast.LENGTH_SHORT).show();
+//        BmobQuery<Avatar> fa=new BmobQuery<>();
+//        fa.addWhereEqualTo("author",imageEntity.getAuthor());
+//
+//        fa.findObjects(new FindListener<Avatar>() {
+//            @Override
+//            public void done(List<Avatar> listt, BmobException e) {
+//                if(listt!=null){
+//                    //Avatar av= listt.get(0);
+//                    //Toast.makeText(mContext, "av:"+listt.size(), Toast.LENGTH_SHORT).show();
+//
+//                    Glide.with(mContext)
+//                            .load(listt.get(0).getAvatar().getFileUrl())
+//                            .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+//                            .into(vh.tvAvatar);
+//                    //Toast.makeText(mContext, "listt", Toast.LENGTH_SHORT).show();
+//                }else{
+//                    Toast.makeText(mContext, "异常"+e.getMessage(), Toast.LENGTH_SHORT).show();
+//                }
+//
+//            }
+//        });
 
-                    Glide.with(mContext)
-                            .load(listt.get(0).getAvatar().getFileUrl())
-                            .apply(RequestOptions.bitmapTransform(new CircleCrop()))
-                            .into(vh.tvAvatar);
-                    //Toast.makeText(mContext, "listt", Toast.LENGTH_SHORT).show();
+
+
+    }
+
+    //用户点击点赞图标
+    public void checkdz(ViewHolder vh, Image imageEntity){
+        BmobQuery<User> query=new BmobQuery<User>();
+        query.addWhereRelatedTo("likes",new BmobPointer(imageEntity));
+        query.findObjects(new FindListener<User>() {
+
+            public void done(List<User> list, BmobException e) {
+                if(e==null){
+                    dzcount=list.size();         //获取点赞数
+                    if(dzcount==0){              //点赞数为零时，直接将该用户插入Image表中该表项的likes中，并更新显示的信息
+                        BmobRelation relation = new BmobRelation();
+                        relation.add(user);
+                        imageEntity.setLikes(relation);
+                        imageEntity.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if(e==null){
+                                    vh.DzImage.setImageResource(R.mipmap.dianzan_select);
+                                    vh.tvDz.setText(String.valueOf(++dzcount));
+                                    //Log.i("bmob","多对多关联添加成功");
+                                }else{
+                                    Log.i("bmob","错误："+e.getMessage());
+                                }
+                            }
+
+                        });
+                    }
+                    for(int i=0;i<dzcount;i++){    //点赞数不为零时，检查是点赞操作还是取消点赞
+                        User B=new User();
+                        B=list.get(i);
+                        if(B.getObjectId().toString().equals(user.getObjectId().toString())){   //取消点赞
+                            BmobRelation relation = new BmobRelation();
+                            relation.remove(user);
+                            imageEntity.setLikes(relation);
+                            imageEntity.update(new UpdateListener() {
+
+                                @Override
+                                public void done(BmobException e) {
+                                    if(e==null){
+                                        vh.DzImage.setImageResource(R.mipmap.dianzan);
+                                        vh.tvDz.setText(String.valueOf(--dzcount));
+                                        //Log.i("bmob","关联关系删除成功");
+                                    }else{
+                                        Log.i("bmob","错误："+e.getMessage());
+                                    }
+                                }
+
+                            });
+                            break;
+                        }
+                        if(i==dzcount-1) {                                                     //点赞
+                            BmobRelation relation = new BmobRelation();
+                            relation.add(user);
+                            imageEntity.setLikes(relation);
+                            imageEntity.update(new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    if(e==null){
+                                        vh.DzImage.setImageResource(R.mipmap.dianzan_select);
+                                        vh.tvDz.setText(String.valueOf(++dzcount));
+                                        //Log.i("bmob","多对多关联添加成功");
+                                    }else{
+                                        Log.i("bmob","失败："+e.getMessage());
+                                    }
+                                }
+
+                            });
+                        }
+
+                    }
                 }else{
-                    Toast.makeText(mContext, "异常"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.i("bmob","失败："+e.getMessage());
                 }
-
             }
         });
-
-
 
     }
 

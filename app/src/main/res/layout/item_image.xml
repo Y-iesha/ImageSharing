@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="330dp"
         android:orientation="vertical"
         android:paddingLeft="21dp"
         android:paddingTop="13dp"
@@ -23,7 +23,7 @@
                 android:id="@+id/img_avatar"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:src="@drawable/header2" />
+                android:src="@mipmap/back_1" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -71,9 +71,9 @@
             <ImageView
                 android:id="@+id/img_cover"
                 android:layout_width="350dp"
-                android:layout_height="230dp"
+                android:layout_height="210dp"
                 android:scaleType="fitXY"
-                android:src="@mipmap/default_bg" />
+                android:src="@mipmap/back_1" />
 
         </RelativeLayout>
 

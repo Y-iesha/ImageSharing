@@ -34,6 +34,7 @@ import com.example.imagesharing.activity.LoginActivity;
 import com.example.imagesharing.activity.RegisterActivity;
 import com.example.imagesharing.entity.Avatar;
 import com.example.imagesharing.entity.Image;
+import com.example.imagesharing.entity.User;
 import com.example.imagesharing.util.PhotoUtils;
 import com.example.imagesharing.util.RealPathFromUriUtils;
 import com.google.android.material.snackbar.Snackbar;
@@ -43,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
+
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
@@ -60,22 +61,13 @@ import cn.bmob.v3.listener.UploadFileListener;
 public class MyFragment extends Fragment {
     private static final String TAG = CollectFragment.class.getName();
     private static final int USE_PHOTO = 1003;
-    private static final int START_CAMERA = 1004;
-    private String avatarID;
     private String image_path;
     private ImageView avatar;
     private TextView username;
     private RelativeLayout logout;
-    private Button btn_album;
-    private Button upload_img;
-    static BmobUser user =BmobUser.getCurrentUser(BmobUser.class);
+
+    static User user = new User();
     View view;
-
-
-
-    public MyFragment() {
-        // Required empty public constructor
-    }
 
 
     public static MyFragment newInstance() {
@@ -93,52 +85,48 @@ public class MyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
         view = inflater.inflate(R.layout.fragment_my, container, false);
         avatar = (ImageView) view.findViewById(R.id.img_avatar);
         username = (TextView)view.findViewById(R.id.text_username);
         logout = (RelativeLayout) view.findViewById(R.id.rl_logout);
 
-        btn_album = (Button) view.findViewById(R.id.album);
-
-        upload_img = (Button) view.findViewById(R.id.upload);
-        BmobUser.getCurrentUser(BmobUser.class);
+        user = User.getCurrentUser(User.class);
         username.setText(user.getUsername());
 
         //加载头像
-        BmobQuery<Avatar> fa=new BmobQuery<>();
-        fa.addWhereEqualTo("author",user);
-
-        fa.findObjects(new FindListener<Avatar>() {
+        BmobQuery<User> bmobQuery = new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("objectId",user.getObjectId());
+        bmobQuery.findObjects(new FindListener<User>() {
             @Override
-            public void done(List<Avatar> list, BmobException e) {
-                if(list!=null){
-                    //Avatar av= listt.get(0);
-                    //Toast.makeText(mContext, "av:"+listt.size(), Toast.LENGTH_SHORT).show(
-
+            public void done(List<User> object, BmobException e) {
+                if (e == null) {
+                    User B=new User();
+                    B=object.get(0);
                     Glide.with(getActivity())
-                            .load(list.get(0).getAvatar().getFileUrl())
+                            .load(B.getAvatar().getFileUrl())
                             .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                             .into(avatar);
-                    //Toast.makeText(mContext, "listt", Toast.LENGTH_SHORT).show();
-                }else{
-                    //Toast.makeText(mContext, "异常"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    //Snackbar.make(view, "查询成功", Snackbar.LENGTH_LONG).show();
+                } else {
+                    Snackbar.make(view, "查询失败：" + e.getMessage(), Snackbar.LENGTH_LONG).show();
                 }
-
             }
         });
 
+
+        //点击头像可以更换头像
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PhotoUtils.use_photo(getActivity(), USE_PHOTO);
             }
         });
+
+        //退出登录
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BmobUser.logOut();
+                User.logOut();
                 Toast.makeText(getActivity(), "退出成功:" , Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent();
                 intent.setClass(getActivity(), MainActivity.class);
@@ -152,82 +140,56 @@ public class MyFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
         RequestOptions options = new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE);
         if (resultCode == Activity.RESULT_OK) {
-
-        if (data == null || options == null) {
-            Log.w(TAG, "user photo data is null");
-            return;
-        }
+            if (data == null || options == null) {
+                Log.w(TAG, "user photo data is null");
+                return;
+            }
         Log.e("data", data.getData().getPath());
         Uri image_uri = data.getData();
         image_path = RealPathFromUriUtils.getRealPathFromUri(getActivity(), data.getData());
+
+        //上传头像到数据库，并显示
         upload();
-        //image_path=image_uri.getPath()+".jpg";
         Glide.with(getActivity())
                 .load(image_uri)
                 .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                 .override(360,200)
                 .into(avatar);
-        // get image path from uri
-        //image_path = PhotoUtil.get_path_from_URI(MainActivity.this, image_uri);
-        // predict image
-        //predict_image(image_path);
 
             }
         }
+
+    //上传头像到数据库
     private void upload() {
 
-        Avatar avatar = new Avatar();
-        BmobFile pic;
-        avatar.setAuthor(user);
-
+        BmobFile avatar;
         String picPath = image_path;
-        pic = new BmobFile(new File(picPath));
-        avatar.setAvatar(pic);
-        pic.uploadblock(new UploadFileListener() {
+        avatar = new BmobFile(new File(picPath));
+        avatar.uploadblock(new UploadFileListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                    Toast.makeText(getActivity(), "上传文件成功:" + pic.getFileUrl(), Toast.LENGTH_SHORT).show();
-                    BmobQuery<Avatar> query=new BmobQuery<Avatar>();
-                    query.addWhereEqualTo("author",user);
-                    query.findObjects(new FindListener<Avatar>() {
+                    Toast.makeText(getActivity(), "上传文件成功:" + avatar.getFileUrl(), Toast.LENGTH_SHORT).show();
 
-                        public void done(List<Avatar> list, BmobException e) {
-                            if(e==null){
-                                Avatar avatar = new Avatar();
-                                avatar.setObjectId(list.get(0).getObjectId());
-                                avatar.setAvatar(pic);
-
-                                avatar.update(new UpdateListener() {
-                                    @Override
-                                    public void done(BmobException e) {
-                                        if (e == null) {
-                                            Toast.makeText(getActivity(), "修改成功:" , Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Log.e("BMOB", e.toString());
-                                            Toast.makeText(getActivity(), "修改失败:" , Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-
-                            }else{
-                                Log.i("bmob","失败："+e.getMessage());
+                    user.setAvatar(avatar);
+                    user.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                Toast.makeText(getActivity(), "修改成功:", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.e("BMOB", e.toString());
+                                Toast.makeText(getActivity(), "修改失败:", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
 
                 } else {
                     Toast.makeText(getActivity(), "上传文件失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-
                 }
             }
         });
     }
-
-
-
 }

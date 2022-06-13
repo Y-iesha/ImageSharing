@@ -18,7 +18,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#0025ff" />
+        android:background="#A74EB6" />
 
     <com.flyco.tablayout.CommonTabLayout
         android:id="@+id/commonTabLayout"
@@ -27,9 +27,9 @@
         android:background="#ffffff"
         tl:tl_iconHeight="30dp"
         tl:tl_iconWidth="30dp"
-        tl:tl_indicator_color="#2C97DE"
+        tl:tl_indicator_color="#BA68C8"
         tl:tl_indicator_height="0dp"
-        tl:tl_textSelectColor="#0025ff"
+        tl:tl_textSelectColor="#BA68C8"
         tl:tl_textUnselectColor="#454544"
         tl:tl_textsize="14sp"
         tl:tl_underline_color="#DDDDDD"

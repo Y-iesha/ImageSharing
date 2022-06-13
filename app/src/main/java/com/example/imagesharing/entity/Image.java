@@ -9,7 +9,7 @@ import cn.bmob.v3.datatype.BmobRelation;
 
 public class Image extends BmobObject implements Serializable {
     private String title;
-    private BmobUser author;
+    private User author;
     private BmobFile pic;
     private int dzCount;
     private int dlCount;
@@ -23,11 +23,11 @@ public class Image extends BmobObject implements Serializable {
         this.title = title;
     }
 
-    public BmobUser getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(BmobUser author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 
