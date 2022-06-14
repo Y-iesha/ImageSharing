@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.imagesharing.R;
-import com.example.imagesharing.entity.Avatar;
 import com.example.imagesharing.entity.Image;
 import com.example.imagesharing.entity.User;
 
@@ -25,8 +24,6 @@ import java.io.File;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
@@ -39,7 +36,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context mContext;
     private List<Image> datas;
     private static int dzcount;
-    static User user =User.getCurrentUser(User.class);
+    private static User user =User.getCurrentUser(User.class);
 
 
 
@@ -117,8 +114,14 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         if(e==null){
                             int dlcount=imageEntity.getDlCount()+1;
                             imageEntity.setDlCount(dlcount);
-                            Toast.makeText(mContext, "下载成功,保存路径:"+savePath, Toast.LENGTH_SHORT).show();
-                            vh.tvDl.setText(String.valueOf(imageEntity.getDlCount()));
+                            imageEntity.update(new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    Toast.makeText(mContext, "下载成功,保存路径:"+savePath, Toast.LENGTH_SHORT).show();
+                                    vh.tvDl.setText(String.valueOf(imageEntity.getDlCount()));
+                                }
+                            });
+
                         }else{
                             Toast.makeText(mContext, "下载失败："+e.getErrorCode()+","+e.getMessage(), Toast.LENGTH_SHORT).show();
 

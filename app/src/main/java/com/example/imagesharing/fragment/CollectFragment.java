@@ -126,22 +126,22 @@ public class CollectFragment extends Fragment {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                    Toast.makeText(getActivity(), "上传文件成功:" + pic.getFileUrl(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "上传图片成功" + pic.getFileUrl(), Toast.LENGTH_SHORT).show();
                     image.save(new SaveListener<String>() {
                         @Override
                         public void done(String s, BmobException e) {
                             if (e == null) {
-                                Toast.makeText(getActivity(), "插入记录成功:" + s, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getActivity(), "插入记录成功:" + s, Toast.LENGTH_SHORT).show();
 
                             } else {
-                                Toast.makeText(getActivity(), "插入记录失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getActivity(), "插入记录失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 //text.setText(e.getMessage());
                             }
                         }
                     });
 
                 } else {
-                    Toast.makeText(getActivity(), "上传文件失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "上传图片失败" + e.getMessage(), Toast.LENGTH_SHORT).show();
 
                 }
             }

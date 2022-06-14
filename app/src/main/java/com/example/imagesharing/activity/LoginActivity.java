@@ -63,9 +63,9 @@ public class LoginActivity extends BaseActivity {
         user.setUsername(name);
         user.setPassword(pwd);
         //BmobUser提供的用户登录方法
-        user.login(new SaveListener<BmobUser>() {
+        user.login(new SaveListener<User>() {
             @Override
-            public void done(BmobUser user, BmobException e) {
+            public void done(User user, BmobException e) {
                 if(e==null){
                     navigateTo(HomeActivity.class);
                     showToast("登录成功"+user.getObjectId());

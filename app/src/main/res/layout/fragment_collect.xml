@@ -89,8 +89,7 @@
             android:id="@+id/img_cover"
             android:layout_width="350dp"
             android:layout_height="230dp"
-            android:scaleType="fitXY"
-             />
+            android:scaleType="fitXY" />
 
     </RelativeLayout>
 
@@ -103,9 +102,10 @@
 
         <Button
             android:id="@+id/upload"
+            android:shape="rectangle"
             android:layout_width="200dp"
             android:layout_height="70dp"
-            android:background="#A74EB6"
+            android:background="@drawable/shape_up_btn"
             android:text="上传"
             android:textSize="50dp"></Button>
 

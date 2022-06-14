@@ -46,7 +46,7 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        mFragments.add(HomeFragment.newInstance("jjj"));
+        mFragments.add(HomeFragment.newInstance("."));
         mFragments.add(CollectFragment.newInstance());
         mFragments.add(MyFragment.newInstance());
         for (int i = 0; i < mTitles.length; i++) {

@@ -1,6 +1,5 @@
 package com.example.imagesharing.fragment;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,16 +8,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,26 +25,19 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.imagesharing.MainActivity;
 import com.example.imagesharing.R;
-import com.example.imagesharing.activity.LoginActivity;
-import com.example.imagesharing.activity.RegisterActivity;
-import com.example.imagesharing.entity.Avatar;
-import com.example.imagesharing.entity.Image;
 import com.example.imagesharing.entity.User;
 import com.example.imagesharing.util.PhotoUtils;
 import com.example.imagesharing.util.RealPathFromUriUtils;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 
 import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
@@ -60,7 +48,7 @@ import cn.bmob.v3.listener.UploadFileListener;
  */
 public class MyFragment extends Fragment {
     private static final String TAG = CollectFragment.class.getName();
-    private static final int USE_PHOTO = 1003;
+    private static final int USE_PHOTO = 1066;
     private String image_path;
     private ImageView avatar;
     private TextView username;
@@ -137,57 +125,107 @@ public class MyFragment extends Fragment {
         return view;
     }
 
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         RequestOptions options = new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE);
         if (resultCode == Activity.RESULT_OK) {
-            if (data == null || options == null) {
-                Log.w(TAG, "user photo data is null");
-                return;
-            }
-        Log.e("data", data.getData().getPath());
-        Uri image_uri = data.getData();
-        image_path = RealPathFromUriUtils.getRealPathFromUri(getActivity(), data.getData());
+            if (requestCode == USE_PHOTO) {
+                if (data == null || options == null) {
+                    Log.w(TAG, "user photo data is null");
+                    return;
+                }
+                Log.e("data", data.getData().getPath());
+                Uri image_uri = data.getData();
+                image_path = RealPathFromUriUtils.getRealPathFromUri(getActivity(), data.getData());
 
-        //上传头像到数据库，并显示
-        upload();
-        Glide.with(getActivity())
-                .load(image_uri)
-                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
-                .override(360,200)
-                .into(avatar);
+                //上传头像到数据库，并显示
+                upload();
+                Glide.with(getActivity())
+                        .load(image_uri)
+                        .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                        .override(360, 200)
+                        .into(avatar);
 
             }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+
+                        int grantResult = grantResults[i];
+                        if (grantResult == PackageManager.PERMISSION_DENIED) {
+                            String s = permissions[i];
+                            Toast.makeText(getActivity(), s + " permission was denied", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                break;
+        }
+
+
+    }
+
+//    // request permissions
+//    private void request_permissions() {
+//
+//        List<String> permissionList = new ArrayList<>();
+//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//            permissionList.add(Manifest.permission.CAMERA);
+//        }
+//
+//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        }
+//
+//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//            permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+//        }
+//
+//        // if list is not empty will request permissions
+//        if (!permissionList.isEmpty()) {
+//            ActivityCompat.requestPermissions(getActivity(), permissionList.toArray(new String[permissionList.size()]), 1);
+//        }
+  //  }
+
 
     //上传头像到数据库
     private void upload() {
 
-        BmobFile avatar;
+        BmobFile avat;
         String picPath = image_path;
-        avatar = new BmobFile(new File(picPath));
-        avatar.uploadblock(new UploadFileListener() {
+        avat = new BmobFile(new File(picPath));
+        avat.uploadblock(new UploadFileListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                    Toast.makeText(getActivity(), "上传文件成功:" + avatar.getFileUrl(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "上传文件成功:" + avat.getFileUrl(), Toast.LENGTH_SHORT).show();
 
-                    user.setAvatar(avatar);
+                    user.setAvatar(avat);
                     user.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                                Toast.makeText(getActivity(), "修改成功:", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "修改成功", Toast.LENGTH_SHORT).show();
                             } else {
                                 Log.e("BMOB", e.toString());
-                                Toast.makeText(getActivity(), "修改失败:", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "修改失败", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
 
                 } else {
-                    Toast.makeText(getActivity(), "上传文件失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "上传文件失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
